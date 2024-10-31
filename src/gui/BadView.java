@@ -26,8 +26,8 @@ public class BadView {
 	private FReizeitbaederModel model;
 	private FreizeitbaederControl control;
 	private BorderPane pane = new BorderPane(); // trebuie de initiat
-	private MenuBar mnbrMenuLeiste = new MenuBar();
 	
+	private MenuBar mnbrMenuLeiste = new MenuBar();
 	private Menu mnDatei = new Menu("Datei");
 	private MenuItem item1 = new MenuItem("csv-export");
 	private MenuItem item2 = new MenuItem("txt-export");
@@ -121,12 +121,14 @@ public class BadView {
 		control.schreibeFreizeitbaederInDatei(typ);
 	}
 
-	public static void zeigeInformationsfensterAn(String meldung) {
-
-	}
-
 	public static void zeigeFehlermeldungAn(String meldung) {
 		// TODO Auto-generated method stub
+		Stage stage = new Stage();
+		stage.setTitle(meldung);
+		BorderPane pane = new BorderPane();
+		Scene scene = new Scene(pane, 400, 400);
+		stage.setScene(scene);
+		stage.show();
 
 	}
 
@@ -136,8 +138,24 @@ public class BadView {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				control.recordPool(inputName.getText(), inputOpenAt.getText(), inputOpenUntil.getText(),
-						inputTemperatur.getText());
+				try {
+					control.recordPool(inputName.getText(), inputOpenAt.getText(), inputOpenUntil.getText(),
+							inputTemperatur.getText());
+					zeigeInformationsfensterAn("Gespeichert");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					zeigeFehlermeldungAn("Fehler beim Submit");
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		anzeigeButton.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				anzeigeText.setText(model.getFreizeitbad().gibFreizeitbadZurueck(';'));
 			}
 		});
 
@@ -163,6 +181,16 @@ public class BadView {
 				}
 			}
 		});
+	}
+	
+	public static void zeigeInformationsfensterAn(String meldung) {
+		
+		Stage stage = new Stage();
+		stage.setTitle(meldung);
+		BorderPane pane = new BorderPane();
+		Scene scene = new Scene(pane, 400, 400);
+		stage.setScene(scene);
+		stage.show();
 	}
 
 }
